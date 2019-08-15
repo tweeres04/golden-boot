@@ -1,0 +1,11 @@
+@import '~bulma';
+
+body {
+	background: linear-gradient(to right, #d7dde8, #757f9a);
+}
+
+@media (min-width: 768px) {
+	.player .info {
+		justify-content: left;
+	}
+}
