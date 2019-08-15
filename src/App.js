@@ -40,7 +40,7 @@ function App() {
 
 function Player({ name, goals, mostGoals }) {
 	return (
-		<div className="player box">
+		<div className="player box" style={{ position: 'relative' }}>
 			{mostGoals === goals && (
 				<span
 					role="img"
