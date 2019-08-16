@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import firebase from 'firebase/app';
 import faker from 'faker';
 import _random from 'lodash/random';
 import _orderBy from 'lodash/orderBy';
 import Avatar from 'react-avatar';
 
 import './App.scss';
+
+import Setup from './Setup';
+import Signin from './Signin';
 
 const fakePlayers = Array.from({ length: 15 }).map(() => ({
 	name: faker.name.findName(),
@@ -14,34 +19,94 @@ const fakePlayers = Array.from({ length: 15 }).map(() => ({
 const sortedPlayers = _orderBy(fakePlayers, ['goals'], ['desc']);
 
 function App() {
+	const [navMenuVisible, setNavMenuVisible] = useState(false);
+	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		firebase.auth().onAuthStateChanged(user => {
+			setUser(user);
+		});
+	}, []);
+
+	return (
+		<Router>
+			<div className="App">
+				<nav className="navbar is-light">
+					<div className="navbar-brand">
+						<h1 className="title is-4 navbar-item is-marginless">
+							The Golden Boot
+						</h1>
+						{user && <div className="navbar-item">{user.displayName}</div>}
+						<div
+							role="button"
+							className="navbar-burger burger"
+							aria-label="menu"
+							aria-expanded="false"
+							data-target="navbarBasicExample"
+							onClick={() => {
+								setNavMenuVisible(!navMenuVisible);
+							}}
+						>
+							<span aria-hidden="true" />
+							<span aria-hidden="true" />
+							<span aria-hidden="true" />
+						</div>
+					</div>
+					<div className={`navbar-menu${navMenuVisible ? ' is-active' : ''}`}>
+						<div className="navbar-end">
+							{user && (
+								<div className="navbar-item">
+									<Link to="/setup">
+										<div>Setup</div>
+									</Link>
+								</div>
+							)}
+							<div className="navbar-item">
+								{user ? (
+									<button
+										className="button"
+										onClick={() => {
+											firebase.auth().signOut();
+										}}
+									>
+										Sign out
+									</button>
+								) : (
+									<Link to="/signin">
+										<button className="button">Sign in</button>
+									</Link>
+								)}
+							</div>
+						</div>
+					</div>
+				</nav>
+				<Switch>
+					<Route path="/signin" component={Signin} />
+					<Route path="/setup" component={Setup} />
+					<Route path="/" component={Players} />
+				</Switch>
+			</div>
+		</Router>
+	);
+}
+
+function Players() {
 	const mostGoals = Math.max(...fakePlayers.map(({ goals }) => goals));
 	return (
-		<div className="App">
-			<nav className="navbar is-light">
-				<div className="navbar-brand">
-					<h1 className="title navbar-item">The Golden Boot</h1>
-				</div>
-			</nav>
-			<section className="section">
-				<div className="container">
-					{sortedPlayers.map(({ name, goals }) => (
-						<Player
-							name={name}
-							goals={goals}
-							key={name}
-							mostGoals={mostGoals}
-						/>
-					))}
-				</div>
-			</section>
-		</div>
+		<section className="section players">
+			<div className="container">
+				{sortedPlayers.map(({ name, goals }) => (
+					<Player name={name} goals={goals} key={name} mostGoals={mostGoals} />
+				))}
+			</div>
+		</section>
 	);
 }
 
 function Player({ name, goals, mostGoals }) {
 	return (
 		<div className="player box" style={{ position: 'relative' }}>
-			{mostGoals === goals && (
+			{mostGoals === goals && goals !== 0 && (
 				<span
 					role="img"
 					aria-label="golden boot"
@@ -84,11 +149,9 @@ function Player({ name, goals, mostGoals }) {
 						</span>
 					) : (
 						Array.from({ length: goals }).map((g, i) => (
-							<>
-								<span role="img" aria-label="goal" key={i}>
-									⚽️
-								</span>
-							</>
+							<span role="img" aria-label="goal" key={i}>
+								⚽️
+							</span>
 						))
 					)}
 				</div>
