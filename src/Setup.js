@@ -72,7 +72,7 @@ export default function Setup() {
 						<div className="columns">
 							<div className="column">
 								{players.map(p => (
-									<div className="card">
+									<div className="card" key={p.name}>
 										<div className="card-content">{p.name}</div>
 									</div>
 								))}
