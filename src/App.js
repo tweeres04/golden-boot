@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.scss';
 
 import Navbar from './Navbar';
-import Setup from './Setup';
 import Signin from './Signin';
-import Players from './Players';
+import Players from './Players/Players';
 
 export default function App() {
 	return (
@@ -15,7 +14,6 @@ export default function App() {
 				<Navbar />
 				<Switch>
 					<Route path="/signin" component={Signin} />
-					<Route path="/setup" component={Setup} />
 					<Route path="/" component={Players} />
 				</Switch>
 			</div>

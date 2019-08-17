@@ -38,13 +38,6 @@ export default function Navbar() {
 			</div>
 			<div className={`navbar-menu${navMenuVisible ? ' is-active' : ''}`}>
 				<div className="navbar-end">
-					{user && (
-						<div className="navbar-item">
-							<Link to="/setup">
-								<div>Setup</div>
-							</Link>
-						</div>
-					)}
 					<div className="navbar-item">
 						{user ? (
 							<button

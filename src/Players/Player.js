@@ -1,32 +1,28 @@
 import React from 'react';
-import faker from 'faker';
-import _random from 'lodash/random';
-import _orderBy from 'lodash/orderBy';
 import Avatar from 'react-avatar';
+import _noop from 'lodash/noop';
 
-const fakePlayers = Array.from({ length: 15 }).map(() => ({
-	name: faker.name.findName(),
-	goals: _random(0, 25)
-}));
-
-const sortedPlayers = _orderBy(fakePlayers, ['goals'], ['desc']);
-
-export default function Players() {
-	const mostGoals = Math.max(...fakePlayers.map(({ goals }) => goals));
+export default function Player({
+	player,
+	mostGoals,
+	user,
+	setShowModal,
+	setModalPlayer
+}) {
+	const { goals, name } = player;
 	return (
-		<section className="section players">
-			<div className="container">
-				{sortedPlayers.map(({ name, goals }) => (
-					<Player name={name} goals={goals} key={name} mostGoals={mostGoals} />
-				))}
-			</div>
-		</section>
-	);
-}
-
-function Player({ name, goals, mostGoals }) {
-	return (
-		<div className="player box" style={{ position: 'relative' }}>
+		<div
+			className="player box"
+			style={{ position: 'relative', ...(user ? { cursor: 'pointer' } : {}) }}
+			onClick={
+				user
+					? () => {
+							setModalPlayer(player);
+							setShowModal(true);
+					  }
+					: _noop
+			}
+		>
 			{mostGoals === goals && goals !== 0 && (
 				<span
 					role="img"
