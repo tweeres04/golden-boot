@@ -7,7 +7,7 @@ import 'firebaseui/dist/firebaseui.css';
 export default function Signin() {
 	useEffect(() => {
 		const uiConfig = {
-			signInSuccessUrl: 'http://localhost:3000',
+			signInSuccessUrl: process.env.REACT_APP_SIGNIN_SUCCESS_URL,
 			signInOptions: [
 				firebase.auth.FacebookAuthProvider.PROVIDER_ID,
 				firebase.auth.EmailAuthProvider.PROVIDER_ID
