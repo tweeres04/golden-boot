@@ -7,7 +7,8 @@ export default function Player({
 	mostGoals,
 	user,
 	setShowModal,
-	setModalPlayer
+	setModalPlayer,
+	incrementGoals
 }) {
 	const { goals, name } = player;
 	return (
@@ -50,12 +51,28 @@ export default function Player({
 						</div>
 					</div>
 					<div className="columns is-mobile is-centered is-vcentered">
+						<div className="column" />
 						<div
 							className="column is-narrow has-text-centered"
 							style={{ borderRadius: '0.5em' }}
 						>
 							<div className="title is-marginless is-1">{goals}</div>
 							<div className="is-size-7">GOAL{goals !== 1 && 'S'}</div>
+						</div>
+						<div className="column has-text-centered">
+							{user && (
+								<button
+									className="button is-large is-rounded"
+									onClick={e => {
+										e.stopPropagation();
+										incrementGoals(player);
+									}}
+								>
+									<span role="img" aria-label="plus">
+										+1
+									</span>
+								</button>
+							)}
 						</div>
 					</div>
 				</div>

@@ -34,7 +34,7 @@ export default function Players() {
 			const teamRef = firebase.firestore().doc('/teams/sffc-prem-women');
 			const teamSnapshot = await teamRef.get();
 
-			const players = teamSnapshot.data().players || [];
+			const { players } = teamSnapshot.data() || [];
 
 			setPlayers(players);
 			setLoading(false);
@@ -61,6 +61,25 @@ export default function Players() {
 			teamRef.update({ players: playersPatch });
 			setPlayers(playersPatch);
 		}
+	}
+
+	function incrementGoals(player) {
+		firebase.firestore().runTransaction(async transaction => {
+			const teamRef = firebase.firestore().doc('/teams/sffc-prem-women');
+			const teamSnapshot = await teamRef.get();
+			const { players } = teamSnapshot.data();
+			const playerIndex = players.findIndex(p => p.id === player.id);
+
+			const { goals } = playerFactory(player);
+
+			const playersPatch = update(players, {
+				[playerIndex]: {
+					goals: { $set: goals + 1 }
+				}
+			});
+			teamRef.update({ players: playersPatch });
+			setPlayers(playersPatch);
+		});
 	}
 
 	const mostGoals = Math.max(...players.map(({ goals }) => goals));
@@ -113,6 +132,7 @@ export default function Players() {
 							user={user}
 							setShowModal={setShowModal}
 							setModalPlayer={setModalPlayer}
+							incrementGoals={incrementGoals}
 						/>
 					))}
 					{showModal && (
