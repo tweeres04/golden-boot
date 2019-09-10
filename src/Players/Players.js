@@ -16,7 +16,11 @@ function playerFactory({ id = generateShortId(), name, goals }) {
 	};
 }
 
-export default function Players() {
+export default function Players({
+	match: {
+		params: { teamId }
+	}
+}) {
 	const [user, setUser] = useState(null);
 	const [players, setPlayers] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -31,7 +35,7 @@ export default function Players() {
 
 	useEffect(() => {
 		async function getPlayers() {
-			const teamRef = firebase.firestore().doc('/teams/sffc-prem-women');
+			const teamRef = firebase.firestore().doc(`/teams/${teamId}`);
 			const teamSnapshot = await teamRef.get();
 
 			const { players } = teamSnapshot.data() || [];
@@ -41,10 +45,10 @@ export default function Players() {
 		}
 
 		getPlayers();
-	}, []);
+	}, [teamId]);
 
 	async function savePlayer(player) {
-		const teamRef = firebase.firestore().doc('/teams/sffc-prem-women');
+		const teamRef = firebase.firestore().doc(`/teams/${teamId}`);
 		const playerIndex = players.findIndex(p => p.id === player.id);
 		player = playerFactory(player);
 		if (playerIndex === -1) {
@@ -65,8 +69,8 @@ export default function Players() {
 
 	function incrementGoals(player) {
 		firebase.firestore().runTransaction(async transaction => {
-			const teamRef = firebase.firestore().doc('/teams/sffc-prem-women');
-			const teamSnapshot = await teamRef.get();
+			const teamRef = firebase.firestore().doc(`/teams/${teamId}`);
+			const teamSnapshot = await transaction.get(teamRef);
 			const { players } = teamSnapshot.data();
 			const playerIndex = players.findIndex(p => p.id === player.id);
 
@@ -77,8 +81,8 @@ export default function Players() {
 					goals: { $set: goals + 1 }
 				}
 			});
-			teamRef.update({ players: playersPatch });
 			setPlayers(playersPatch);
+			return transaction.update(teamRef, { players: playersPatch });
 		});
 	}
 
@@ -127,6 +131,7 @@ export default function Players() {
 					)}
 					{sortedPlayers.map(p => (
 						<Player
+							key={p.id}
 							player={p}
 							mostGoals={mostGoals}
 							user={user}

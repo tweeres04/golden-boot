@@ -5,6 +5,7 @@ import './App.scss';
 
 import Navbar from './Navbar';
 import Signin from './Signin';
+import Teams from './Teams';
 import Players from './Players/Players';
 
 export default function App() {
@@ -14,7 +15,8 @@ export default function App() {
 				<Navbar />
 				<Switch>
 					<Route path="/signin" component={Signin} />
-					<Route path="/" component={Players} />
+					<Route path="/:teamId" component={Players} />
+					<Route path="/" component={Teams} />
 				</Switch>
 			</div>
 		</Router>

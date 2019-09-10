@@ -1,6 +1,7 @@
 @import '~bulma';
 
-.players {
+.players,
+.teams {
 	background: linear-gradient(to right, #d7dde8, #757f9a);
 	min-height: 100vh;
 }
