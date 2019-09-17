@@ -15,7 +15,7 @@ export default function App() {
 				<Navbar />
 				<Switch>
 					<Route path="/signin" component={Signin} />
-					<Route path="/:teamId" component={Players} />
+					<Route path="/:teamId/:stat?" component={Players} />
 					<Route path="/" component={Teams} />
 				</Switch>
 			</div>

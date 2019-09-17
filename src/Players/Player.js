@@ -2,15 +2,19 @@ import React from 'react';
 import Avatar from 'react-avatar';
 import _noop from 'lodash/noop';
 
+import statsList from './statsList';
+
 export default function Player({
 	player,
-	mostGoals,
+	statField,
+	highestStat,
 	user,
 	setShowModal,
 	setModalPlayer,
-	incrementGoals
+	incrementField
 }) {
-	const { goals, name } = player;
+	const { name } = player;
+	const stat = player[statField] || 0;
 	return (
 		<div
 			className="player box"
@@ -24,7 +28,7 @@ export default function Player({
 					: _noop
 			}
 		>
-			{mostGoals === goals && goals !== 0 && (
+			{highestStat === stat && stat !== 0 && (
 				<span
 					role="img"
 					aria-label="golden boot"
@@ -56,8 +60,13 @@ export default function Player({
 							className="column is-narrow has-text-centered"
 							style={{ borderRadius: '0.5em' }}
 						>
-							<div className="title is-marginless is-1">{goals}</div>
-							<div className="is-size-7">GOAL{goals !== 1 && 'S'}</div>
+							<div className="title is-marginless is-1">{stat}</div>
+							<div className="is-size-7">
+								{(stat !== 1
+									? statsList[statField].plural
+									: statsList[statField].singular
+								).toUpperCase()}
+							</div>
 						</div>
 						<div className="column has-text-centered">
 							{user && (
@@ -65,7 +74,7 @@ export default function Player({
 									className="button is-large is-rounded"
 									onClick={e => {
 										e.stopPropagation();
-										incrementGoals(player);
+										incrementField(statField)(player);
 									}}
 								>
 									<span role="img" aria-label="plus">
@@ -77,14 +86,14 @@ export default function Player({
 					</div>
 				</div>
 				<div className="column is-size-5 has-text-centered">
-					{goals < 1 ? (
-						<span role="img" aria-label="no goals">
+					{stat < 1 ? (
+						<span role="img" aria-label="no stat">
 							🥚
 						</span>
 					) : (
-						Array.from({ length: goals }).map((g, i) => (
-							<span role="img" aria-label="goal" key={i}>
-								⚽️
+						Array.from({ length: stat }).map((s, i) => (
+							<span role="img" aria-label={statField} key={i}>
+								{statsList[statField].emoji}
 							</span>
 						))
 					)}

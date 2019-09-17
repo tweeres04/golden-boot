@@ -7,7 +7,7 @@ export default function PlayerModal({
 	setModalPlayer
 }) {
 	const [playerData, setPlayerData] = useState(
-		player || { name: '', goals: 0 }
+		player || { name: '', goals: 0, mvps: 0 }
 	);
 
 	function closeModal() {
@@ -56,6 +56,21 @@ export default function PlayerModal({
 								id="goals"
 								name="goals"
 								value={playerData.goals}
+								onChange={handleChange}
+							/>
+						</div>
+					</div>
+					<div className="field">
+						<label htmlFor="mvps" className="label">
+							MVPs
+						</label>
+						<div className="control">
+							<input
+								type="number"
+								className="input"
+								id="mvps"
+								name="mvps"
+								value={playerData.mvps}
 								onChange={handleChange}
 							/>
 						</div>
