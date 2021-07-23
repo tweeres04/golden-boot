@@ -96,7 +96,7 @@ export default function Players({
 	}
 
 	const highestStat = Math.max(...players.map(player => player[stat]));
-	const sortedPlayers = _orderBy(players, [stat], ['desc']);
+	const sortedPlayers = _orderBy(players, [stat, 'name'], ['desc', 'asc']);
 
 	return (
 		loading || (
