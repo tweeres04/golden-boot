@@ -120,7 +120,7 @@ export default function Players({
 						<div className="tabs">
 							<ul>
 								{_map(statsList, ({ url, title }, id) => (
-									<li className={stat === id ? 'is-active' : ''}>
+									<li className={stat === id ? 'is-active' : ''} key={id}>
 										<Link to={`/${teamId}${url}`}>{title}</Link>
 									</li>
 								))}
